@@ -1,5 +1,6 @@
 package com.radutodosan.users.dtos;
 
+import com.radutodosan.users.entities.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,6 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtResponse {
     private String token;
-    private String username;
-    private String email;
+    private AppUser user;
 }

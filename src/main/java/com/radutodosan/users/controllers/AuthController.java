@@ -1,9 +1,6 @@
 package com.radutodosan.users.controllers;
 
-import com.radutodosan.users.dtos.ApiResponseDTO;
-import com.radutodosan.users.dtos.JwtResponse;
-import com.radutodosan.users.dtos.LoginRequestDTO;
-import com.radutodosan.users.dtos.SignupRequestDTO;
+import com.radutodosan.users.dtos.*;
 import com.radutodosan.users.entities.AppUser;
 import com.radutodosan.users.services.AppUserService;
 import com.radutodosan.users.utils.JwtUtil;
@@ -14,10 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/users")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -41,7 +36,7 @@ public class AuthController {
         try {
             AppUser user = appUserService.authenticate(request);
             String token = jwtUtil.generateToken(user.getUsername());
-            JwtResponse jwtResponse = new JwtResponse(token, user.getUsername(), user.getEmail());
+            JwtResponse jwtResponse = new JwtResponse(token, user);
             return ResponseEntity.ok(new ApiResponseDTO<>(true, "Login successful", jwtResponse));
         } catch (RuntimeException e) {
             return ResponseEntity
@@ -53,12 +48,35 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+            ApiResponseDTO<?> errorResponse = new ApiResponseDTO<>(
+                    false,
+                    "User is not authenticated",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
 
-        return ResponseEntity.ok(Map.of(
-                "username", userDetails.getUsername()
-        ));
+        try {
+            String username = userDetails.getUsername();
+            AppUser mechanic = appUserService.getByUsername(username);
+            AppUserDetailsDTO mechanicDetails = AppUserDetailsDTO.builder()
+                    .username(mechanic.getUsername())
+                    .email(mechanic.getEmail())
+                    .build();
+            ApiResponseDTO<?> response = new ApiResponseDTO<>(
+                    true,
+                    "User retrieved successfully",
+                    mechanicDetails
+            );
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponseDTO<?> errorResponse = new ApiResponseDTO<>(
+                    false,
+                    "User not found: " + e.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 
 

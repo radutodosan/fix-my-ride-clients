@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/change-info")
+@RequestMapping("users/change-info")
 @RequiredArgsConstructor
 public class ChangeInformationController {
 
