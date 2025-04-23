@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.radutodosan</groupId>
-	<artifactId>users</artifactId>
+	<artifactId>clients</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>users</name>
 	<description>users management in spring boot</description>
