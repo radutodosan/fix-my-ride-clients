@@ -3,6 +3,9 @@ package com.radutodosan.users.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Getter
@@ -25,7 +28,8 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
-    
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Car> cars = new ArrayList<>();
     
     
 }
