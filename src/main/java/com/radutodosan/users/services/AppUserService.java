@@ -4,7 +4,6 @@ import com.radutodosan.users.entities.AppUser;
 import com.radutodosan.users.repositories.AppUserRepository;
 import com.radutodosan.users.dtos.LoginRequestDTO;
 import com.radutodosan.users.dtos.SignupRequestDTO;
-import com.radutodosan.users.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,6 @@ public class AppUserService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
 
     public void signup(SignupRequestDTO signUpRequest) {
         // Check if username or email already exists
@@ -34,6 +32,7 @@ public class AppUserService {
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .pictureUrl("https://robohash.org/" + signUpRequest.getUsername() + ".png")
                 .build();
 
         appUserRepository.save(user);

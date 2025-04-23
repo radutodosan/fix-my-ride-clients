@@ -28,6 +28,8 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
+    private String pictureUrl;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Car> cars = new ArrayList<>();
     
