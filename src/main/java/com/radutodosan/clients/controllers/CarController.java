@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/clients/cars")
+@RequestMapping("/client/cars")
 @RequiredArgsConstructor
 public class CarController {
 
@@ -50,7 +50,7 @@ public class CarController {
     }
 
 
-    @DeleteMapping("/{carId}")
+    @DeleteMapping("/delete-car/{carId}")
     public ResponseEntity<?> deleteCar(@AuthenticationPrincipal UserDetails userDetails,
                                        @PathVariable Long carId) {
 
