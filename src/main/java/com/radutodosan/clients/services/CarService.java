@@ -33,6 +33,22 @@ public class CarService {
         return carRepository.findByOwner(client);
     }
 
+    public Car updateCar(Long carId, String username, CarRequestDTO request) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+
+        if (!car.getOwner().getUsername().equals(username)) {
+            throw new RuntimeException("You can only update your own cars");
+        }
+
+        car.setBrand(request.getBrand());
+        car.setModel(request.getModel());
+        car.setYear(request.getYear());
+        car.setLicensePlate(request.getLicensePlate());
+
+        return carRepository.save(car);
+    }
+
     public void deleteCar(Long carId, String username) {
         Client client = clientRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("Client not found"));

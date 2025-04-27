@@ -49,6 +49,23 @@ public class CarController {
         return ResponseEntity.ok(new ApiResponseDTO<>(true, "Cars retrieved", cars));
     }
 
+    @PutMapping("/update-car/{carId}")
+    public ResponseEntity<?> updateCar(@PathVariable Long carId,
+                                       @RequestBody CarRequestDTO request,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponseDTO<>(false, "User not authenticated", null));
+        }
+
+        try {
+            Car updatedCar = carService.updateCar(carId, userDetails.getUsername(), request);
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "Car updated successfully", updatedCar));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN) // aici pui explicit 403!
+                    .body(new ApiResponseDTO<>(false, e.getMessage(), null));
+        }
+    }
 
     @DeleteMapping("/delete-car/{carId}")
     public ResponseEntity<?> deleteCar(@AuthenticationPrincipal UserDetails userDetails,

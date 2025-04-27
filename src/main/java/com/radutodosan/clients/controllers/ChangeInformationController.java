@@ -1,5 +1,6 @@
 package com.radutodosan.clients.controllers;
 
+import com.radutodosan.clients.dtos.ApiResponseDTO;
 import com.radutodosan.clients.dtos.ChangeEmailRequestDTO;
 import com.radutodosan.clients.dtos.ChangePasswordRequestDTO;
 import com.radutodosan.clients.entities.Client;
@@ -29,12 +30,15 @@ public class ChangeInformationController {
                 new UsernameNotFoundException("Client not found"));
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), client.getPassword())) {
-            return ResponseEntity.badRequest().body("Current password is incorrect");
+            ApiResponseDTO<?> error = new ApiResponseDTO<>(false, "Current password is incorrect", null);
+            return ResponseEntity.badRequest().body(error);
         }
 
         client.setPassword(passwordEncoder.encode(request.getNewPassword()));
         clientRepository.save(client);
-        return ResponseEntity.ok("Password changed successfully");
+
+        ApiResponseDTO<String> success = new ApiResponseDTO<>(true, "Password changed successfully", null);
+        return ResponseEntity.ok(success);
     }
 
     @PostMapping("/change-email")
@@ -43,19 +47,21 @@ public class ChangeInformationController {
         Client client = clientRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Client not found"));
 
-        // check if password matches
         if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
-            return ResponseEntity.badRequest().body("Password is incorrect");
+            ApiResponseDTO<?> error = new ApiResponseDTO<>(false, "Password is incorrect", null);
+            return ResponseEntity.badRequest().body(error);
         }
 
-        // check if email is already used
         if (clientRepository.existsByEmail(request.getNewEmail())) {
-            return ResponseEntity.badRequest().body("Email already in use");
+            ApiResponseDTO<?> error = new ApiResponseDTO<>(false, "Email already in use", null);
+            return ResponseEntity.badRequest().body(error);
         }
 
         client.setEmail(request.getNewEmail());
         clientRepository.save(client);
-        return ResponseEntity.ok("Email changed successfully");
+
+        ApiResponseDTO<String> success = new ApiResponseDTO<>(true, "Email changed successfully", null);
+        return ResponseEntity.ok(success);
     }
 
 }

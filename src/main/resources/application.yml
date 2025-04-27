@@ -42,5 +42,9 @@ security:
     access-token-expiration-time: 120000 # 2 minutes (in milliseconds) (900000 for 15 minutes)
     refresh-token-expiration-time: 604800000 # 7 days (in milliseconds)
 
+mechanics:
+  service:
+    url: http://localhost:8082
 
 spring.config.import: optional:file:.env[.properties]
+
