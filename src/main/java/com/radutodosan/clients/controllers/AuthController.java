@@ -69,6 +69,7 @@ public class AuthController {
             ClientDetailsDTO clientDetails = ClientDetailsDTO.builder()
                     .username(client.getUsername())
                     .email(client.getEmail())
+                    .pictureUrl(client.getPictureUrl())
                     .build();
             ApiResponseDTO<?> response = new ApiResponseDTO<>(
                     true,
