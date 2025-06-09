@@ -33,7 +33,7 @@ public class ClientMechanicBridgeController {
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<Object> response = restTemplate.exchange(
-                    mechanicsServiceUrl + "/mechanics/all",
+                    mechanicsServiceUrl + "/all",
                     HttpMethod.GET,
                     entity,
                     Object.class
