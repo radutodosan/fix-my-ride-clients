@@ -34,7 +34,7 @@ spring:
       enabled: false
 
   profiles:
-    active: dev
+    active: prod
 
 security:
   jwt:
